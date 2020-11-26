@@ -17,43 +17,48 @@ flag = True
 
 cg_out = vast.Wire('cg_out')
 Newitems.append(cg_out)
+#add clock gate cell sky130_fd_sc_hd_dlclkp
+#output GCLK
+#input GATE
+#input CLK
 
+clock_gate_args= [
+vast.PortArg("GCLK" ,vast.Identifier("cg_out")),
+vast.PortArg("GATE",vast.Identifier("en")),
+vast.PortArg("CLK",vast.Identifier("clk"))
+]
+
+
+clock_gate_cell = vast.Instance(
+"sky130_fd_sc_hd_dlclkp",
+"__clock_gate_cell__",
+tuple(clock_gate_args),
+tuple()
+)
+
+flag2 = False
 
 for itemDeclaration in definition.items:
     flag = True
     item_type = type(itemDeclaration).__name__
     if item_type == "InstanceList":
-        instance = itemDeclaration.instances[0] 
+        instance = itemDeclaration.instances[0]
+        if flag2 == False: 
+        	Newitems.append(vast.InstanceList("sky130_fd_sc_hd__dlclkp", tuple(), tuple([clock_gate_cell])))
+        	flag2 = True 	
         if instance.module == "sky130_fd_sc_hd__mux2_1":
           	flag = False
         for hook in instance.portlist:
             if hook.portname == "D":
                 hook.argname = vast.Identifier("cg_out") 
-    if flag == True:
+    if flag:
        
        Newitems.append(itemDeclaration)
    	
 
 
-#add clock gate cell sky130_fd_sc_hd_dlclkp
-#output GCLK
-#input GATE
-#input CLK
-clock_gate_args= [
-        vast.PortArg("GCLK" ,vast.Identifier("cg_out")),
-        vast.PortArg("GATE",vast.Identifier("en")),
-        vast.PortArg("CLK",vast.Identifier("clk"))
-]
 
 
-clock_gate_cell = vast.Instance(
-        "sky130_fd_sc_hd_dlclkp",
-        "__clock_gate_cell__",
-        tuple(clock_gate_args),
-        tuple()                            
-)
-
-Newitems.append(vast.InstanceList("sky130_fd_sc_hd__dlclkp", tuple(), tuple([clock_gate_cell])))
 
 
 # Add the instances list to the AST items
