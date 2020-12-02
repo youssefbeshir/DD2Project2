@@ -8,8 +8,8 @@ Automatic Clock Gating
 
 Team Members:
 
-Mohamed Taha
-Omar Mahdy
+Mohamed Taha,
+Omar Mahdy,
 Youssef Beshir
 
 How to run the script:
