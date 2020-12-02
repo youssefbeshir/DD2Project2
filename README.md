@@ -8,7 +8,7 @@ Automatic Clock Gating
 
 Team Members:
 
-Mohammed Taha
+Mohamed Taha
 Omar Mahdy
 Youssef Beshir
 
