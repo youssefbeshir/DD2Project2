@@ -1,40 +1,41 @@
 
+MS3:
 Approach:
 
-Our Utility takes the verilog file name without extensions (i.e  test1 -> python3 clk_gating_utility filename
+-Our Utility takes the verilog file name without extensions (i.e  test1 -> python3 clk_gating_utility filename
 
-The utility then parse the code using pyverilog code parser
+- The utility then parse the code using pyverilog code parser
 
-Calls the function parsingprocess(ast) which contains the logic of the utility
+- Calls the function parsingprocess(ast) which contains the logic of the utility
 
-Inside parsingprocess()
-We created list newitems (to contain all the wires instance modules of our design, but we will appended and control which module to include and which to exclude, list L1, list L2, and some flags to be used
+-Inside parsingprocess()
+  -We created list newitems (to contain all the wires instance modules of our design, but we will appended and control which module to include and which to exclude, list L1, list L2, and some flags to be used
 
-We then created a wire which will be the output of the clock gating cell and append it to our newitems
+  -We then created a wire which will be the output of the clock gating cell and append it to our newitems
 
-We then created the clock gating cell instance (sky130 specific pdk)
+  -We then created the clock gating cell instance (sky130 specific pdk)
 
-Inside the food loop for itemDeclaration in definition.items: exists our logic of the code
+  -Inside the food loop for itemDeclaration in definition.items: exists our logic of the code
 
-We used a flag flag2 = False to make sure that we have only one instance of the ICG cell
+  -We used a flag flag2 = False to make sure that we have only one instance of the ICG cell
 
-We then used another flag   flag = True to and set if to false when we have a mux so that we remove any mux instances and append in our newitems list only when the flag is true
+  -We then used another flag   flag = True to and set if to false when we have a mux so that we remove any mux instances and append in our newitems list only when the flag is true
 
-Then we adjusted the inputs and outputs of the instances to match the design
+  -Then we adjusted the inputs and outputs of the instances to match the design
 
-We searched for the clk portname in the flip flop and and changed its argname to be the output of the ICG cell
+  -We searched for the clk portname in the flip flop and and changed its argname to be the output of the ICG cell
 
-We then changed the input and output of the flip flop cells to match the inputs and outputs that were originally entering the muxes
-We then add the instances list to the AST items
-We then call the function that generate the output file and we add to its name the part "utility_out.gl.v"  
+  -We then changed the input and output of the flip flop cells to match the inputs and outputs that were originally entering the muxes
+  -We then add the instances list to the AST items
+  -We then call the function that generate the output file and we add to its name the part "utility_out.gl.v"  
 
 
 
 How to use Utility:
 
-Open a terminal window in the same directory of the project files.
-Type: python3 clk_gating_utility.py gatelevel_netlist_filename_without_extension
-You will find the newly generated in the same directory of the old gate level netlist file with the same name + "utility_out.gl.v".
+  -Open a terminal window in the same directory of the project files.
+  -Type: python3 clk_gating_utility.py gatelevel_netlist_filename_without_extension
+  -You will find the newly generated in the same directory of the old gate level netlist file with the same name + "utility_out.gl.v".
 
 
 
