@@ -46,7 +46,7 @@ Progress:
 
 Till now we have provided the source code of our python utility that we have built in the previous milestone (Prototype) and tested it using a sample gate level netlist where the utility generated the new gate level where the old high power consuming structure is removed and replaced with the integrated clock gating (ICG) instance. Also, we have provided in the current milestone more test cases for our python utility which tests the utility using different sizes of input [1bit-2bits-3bits-4bits-32bits].
 
-In the next milestone we are planning to extend the functionality of our utility where it can accept and parse any cells other than the SkyWater130 cells and modify its structure to make it more power efficient. Moreover, we plan to provide an analysis to evaluate the power before and after to quantify the reduction.
+In the next milestone we are planning to extend the functionality of our utility where it can accept and parse any cells other than the Sky130 cells and modify its structure to make it more power efficient. Moreover, we plan to provide an analysis to evaluate the power before and after to quantify the reduction.
 
 
 Plans to evaluate the power before and after to quantify the reduction:
