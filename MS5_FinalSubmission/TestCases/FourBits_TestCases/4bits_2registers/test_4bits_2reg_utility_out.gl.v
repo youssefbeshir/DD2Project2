@@ -19,7 +19,7 @@ module test_4bits_2reg
   input en;
   input en2;
 
-  sky130_fd_sc_hd__dlclkp_2
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out0),
@@ -28,7 +28,7 @@ module test_4bits_2reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_2
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out1),
