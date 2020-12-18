@@ -1,3 +1,4 @@
+from typing import no_type_check_decorator
 import pyverilog.vparser.ast as vast
 from pyverilog.vparser.parser import parse
 from pyverilog.ast_code_generator.codegen import ASTCodeGenerator
@@ -120,6 +121,72 @@ def icg_cells (Enables_num, Enables_total,icg_count,newitems,ICG_count_list):
         icg_count = icg_count+1
     return
 
+
+#***********************************************
+def handle_ff(definition, Enables_num, L3,ffin_list):
+    icg_outputs = []
+    right_order =[]
+    i= 0
+    ii =0
+ 
+    ff_clk_in=0
+    m=0
+    L3_temp = []
+
+    for itemDeclaration in definition.items:
+        item_type = type(itemDeclaration).__name__
+        if item_type == "InstanceList":
+            instance = itemDeclaration.instances[0]
+            if instance.module == "sky130_fd_sc_hd_dlclkp":
+                for x in instance.portlist:
+                    if x.portname == "GCLK":
+                        icg_outputs.append(x.argname)
+    #print (icg_outputs)
+   # print (L3)
+    
+    for n in L3: 
+        if n not in L3_temp: ## REMOVE duplicates so that we can have only the true number of enables without any duplicates
+            L3_temp.append(n)
+
+
+    mapping = dict(zip(L3_temp,icg_outputs))
+    #print("element",mapping["en"])
+    #print("mapping",mapping)
+
+    while ii < len(L3):
+        for i in mapping:
+            if L3[ii] == i:
+                right_order.append(mapping[i])
+
+        ii+=1
+    
+#    print (right_order)
+    #map(icg_outputs[0],)
+    for itemDeclaration in definition.items:
+        item_type = type(itemDeclaration).__name__
+        if item_type == "InstanceList":
+            instance = itemDeclaration.instances[0]
+
+            for hook in instance.portlist:
+                if instance.module == "sky130_fd_sc_hd__dfxtp_1":   
+                    if hook.portname == "CLK":
+                        if Enables_num == 1:
+                            hook.argname = vast.Identifier("cg_out"+ str(ff_clk_in))
+                        else:
+                            if Enables_num == len(ffin_list):
+                                hook.argname = vast.Identifier("cg_out"+ str(ff_clk_in))
+                                ff_clk_in +=1
+                            else:
+                                if m< len(right_order):
+                                    hook.argname = right_order[m]
+                                    m+=1
+
+                             
+                            # print("HERE")
+                            # print ("instancename",instance.name, "argument", hook.argname)
+    return
+                
+
 #*********************************************
 def parsingprocess(definition):
     newitems = []
@@ -128,6 +195,7 @@ def parsingprocess(definition):
 
     L = []
     L2 = []
+    L3 = []
     ffin_list =[]
     icg_count=0
     icg_wire = 0
@@ -172,30 +240,30 @@ def parsingprocess(definition):
                             L.append(x.argname)
                         if x.portname == "A0":
                             L2.append(x.argname)
+                        if x.portname == "S":
+                            L3.append(x.argname)
+
+            #print(L3)
             for hook in instance.portlist:
-                if instance.module == "sky130_fd_sc_hd__dfxtp_1":
-                    if hook.portname == "CLK":
-                        if Enables_num == 1:
-                            hook.argname = vast.Identifier("cg_out"+ str(ff_clk_in))
-                        else:
-                            hook.argname = vast.Identifier("cg_out"+ str(ff_clk_in))
-                            ff_clk_in +=1
-                if hook.portname == "D":
-                    for p in range(len(L)):
-                        hook.argname = L[p]
-                        L.remove(hook.argname)
-                        break
-                if hook.portname == "Q":
-                    for p in range(len(L2)):
-                        hook.argname = L2[p]
-                        L2.remove(hook.argname)
-                        break
+                if instance.module == "sky130_fd_sc_hd__dfxtp_1":                                
+                    if hook.portname == "D":
+                        for p in range(len(L)):
+                            hook.argname = L[p]                             
+                            L.remove(hook.argname)
+                            break
+                    if hook.portname == "Q":
+                        for p in range(len(L2)):
+                            hook.argname = L2[p]
+                            L2.remove(hook.argname)
+                            break
+
         if  WithoutMux:
             newitems.append(itemDeclaration)
 
     # Add the instances list to the AST items
     items = newitems
     definition.items = tuple(items)
+    handle_ff(definition=definition, Enables_num=Enables_num,L3=L3,ffin_list=ffin_list)
 
     return
 
@@ -206,7 +274,7 @@ def generateOutFile(ast):
     codegen = ASTCodeGenerator()
     rslt = codegen.visit(ast)
     # ast.show()
-    f = open(sys.argv[1] + "utility_out.gl.v", "w+")
+    f = open(sys.argv[1] + "_utility_out.gl.v", "w+")
     f.write(rslt)
     f.close()
     return
