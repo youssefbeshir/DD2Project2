@@ -94,23 +94,30 @@ def morethan_1_reg_logic(definition,Enables_num,Enables_total,ICG_count_list,ffi
     Enables_total = len(ICG_count_list)
     Enables_num = len(ICG_count_list_noduplicate)
 
-    return Enables_num, Enables_total #return the number of enables we have in our 
+    return Enables_num, Enables_total,ICG_count_list_noduplicate #return the number of enables we have in our 
 #**********************************************
-def check_size(Enables_total):
+def check_size(ffin_list,Enables_num):
     size = 1
     initial= 7
+    #print(Enables_total,"##",Enables_total)
+    #print (len(ffin_list))
+    x = len(ffin_list)/Enables_num
     while (size < 4):
-        if Enables_total <= initial:
+        if x <= initial:
             return size
         initial= initial*2+1
         size*=2 
 
     return size
 #************************************************
-def icg_cells (Enables_num, Enables_total,icg_count,newitems,ICG_count_list):
+def icg_cells (Enables_num, Enables_total,icg_count,newitems,ICG_count_list,ffin_list):
     ## SIZES CHECK ##
-    icg_size = check_size(Enables_total= Enables_total)
+    icg_size = check_size(ffin_list= ffin_list,Enables_num=Enables_num)
+
+   # print(Enables_num)
+    #print(ICG_count_list)
     while icg_count < Enables_num:
+        #print(icg_count)
         clock_gate_args = [
             vast.PortArg("GCLK", vast.Identifier("cg_out"+str(icg_count))),
             vast.PortArg("GATE", vast.Identifier(str(ICG_count_list[icg_count]))),
@@ -120,8 +127,6 @@ def icg_cells (Enables_num, Enables_total,icg_count,newitems,ICG_count_list):
         newitems.append(vast.InstanceList("sky130_fd_sc_hd__dlclkp"+"_"+str(icg_size), tuple(), tuple([clock_gate_cell])))
         icg_count = icg_count+1
     return
-
-
 #***********************************************
 def handle_ff(definition, Enables_num, L3,ffin_list):
     icg_outputs = []
@@ -142,7 +147,7 @@ def handle_ff(definition, Enables_num, L3,ffin_list):
                     if x.portname == "GCLK":
                         icg_outputs.append(x.argname)
     #print (icg_outputs)
-   # print (L3)
+    #print (L3)
     
     for n in L3: 
         if n not in L3_temp: ## REMOVE duplicates so that we can have only the true number of enables without any duplicates
@@ -158,9 +163,8 @@ def handle_ff(definition, Enables_num, L3,ffin_list):
             if L3[ii] == i:
                 right_order.append(mapping[i])
 
-        ii+=1
-    
-#    print (right_order)
+        ii+=1  
+ #   print (right_order)
     #map(icg_outputs[0],)
     for itemDeclaration in definition.items:
         item_type = type(itemDeclaration).__name__
@@ -209,7 +213,7 @@ def parsingprocess(definition):
 
     #Checks for the number of enables in muxes of the gate lebel to check that we have more than one
     #register and thus try to fit this condition
-    Enables_num,Enables_total = morethan_1_reg_logic(definition= definition,Enables_num= Enables_num, Enables_total= Enables_total, ICG_count_list=ICG_count_list
+    Enables_num,Enables_total,ICG_count_list = morethan_1_reg_logic(definition= definition,Enables_num= Enables_num, Enables_total= Enables_total, ICG_count_list=ICG_count_list
     ,ffin_list=ffin_list)         
 #instantiate wires -> outputs ICG
     while icg_wire < Enables_num:       
@@ -225,7 +229,7 @@ def parsingprocess(definition):
         if item_type == "InstanceList":
             instance = itemDeclaration.instances[0]
             if not icg_instances:
-                icg_cells(Enables_num=Enables_num, Enables_total = Enables_total, icg_count=icg_count, newitems=newitems,ICG_count_list=ICG_count_list) ##function that adds icg cells
+                icg_cells(Enables_num=Enables_num, Enables_total = Enables_total, icg_count=icg_count, newitems=newitems,ICG_count_list=ICG_count_list,ffin_list=ffin_list) ##function that adds icg cells
                 icg_instances=True
             if instance.module == "sky130_fd_sc_hd__mux2_1":
                     for hook in instance.portlist:

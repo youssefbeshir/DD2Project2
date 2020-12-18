@@ -75,7 +75,7 @@ module test_1bit_16reg
   input en8;
   input en9;
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out0),
@@ -84,7 +84,7 @@ module test_1bit_16reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out1),
@@ -93,7 +93,7 @@ module test_1bit_16reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out2),
@@ -102,7 +102,7 @@ module test_1bit_16reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out3),
@@ -111,7 +111,7 @@ module test_1bit_16reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out4),
@@ -120,7 +120,7 @@ module test_1bit_16reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out5),
@@ -129,7 +129,7 @@ module test_1bit_16reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out6),
@@ -138,7 +138,7 @@ module test_1bit_16reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out7),
@@ -147,7 +147,7 @@ module test_1bit_16reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out8),
@@ -156,7 +156,7 @@ module test_1bit_16reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out9),
@@ -165,7 +165,7 @@ module test_1bit_16reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out10),
@@ -174,7 +174,7 @@ module test_1bit_16reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out11),
@@ -183,7 +183,7 @@ module test_1bit_16reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out12),
@@ -192,7 +192,7 @@ module test_1bit_16reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out13),
@@ -201,7 +201,7 @@ module test_1bit_16reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out14),
@@ -210,7 +210,7 @@ module test_1bit_16reg
   );
 
 
-  sky130_fd_sc_hd__dlclkp_4
+  sky130_fd_sc_hd__dlclkp_1
   __clock_gate_cell__
   (
     .GCLK(cg_out15),
