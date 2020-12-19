@@ -116,6 +116,7 @@ def icg_cells (Enables_num, Enables_total,icg_count,newitems,ICG_count_list,ffin
 
    # print(Enables_num)
     #print(ICG_count_list)
+    i=0
     while icg_count < Enables_num:
         #print(icg_count)
         clock_gate_args = [
@@ -123,8 +124,9 @@ def icg_cells (Enables_num, Enables_total,icg_count,newitems,ICG_count_list,ffin
             vast.PortArg("GATE", vast.Identifier(str(ICG_count_list[icg_count]))),
             vast.PortArg("CLK", vast.Identifier("clk"))]
 
-        clock_gate_cell = vast.Instance("sky130_fd_sc_hd_dlclkp","__clock_gate_cell__",tuple(clock_gate_args),tuple()) 
+        clock_gate_cell = vast.Instance("sky130_fd_sc_hd_dlclkp","__clock_gate_cell__"+str(i),tuple(clock_gate_args),tuple()) 
         newitems.append(vast.InstanceList("sky130_fd_sc_hd__dlclkp"+"_"+str(icg_size), tuple(), tuple([clock_gate_cell])))
+        i+=1
         icg_count = icg_count+1
     return
 #***********************************************
@@ -148,11 +150,12 @@ def handle_ff(definition, Enables_num, L3,ffin_list):
                         icg_outputs.append(x.argname)
     #print (icg_outputs)
     #print (L3)
-    
+
     for n in L3: 
         if n not in L3_temp: ## REMOVE duplicates so that we can have only the true number of enables without any duplicates
             L3_temp.append(n)
 
+    #print(L3_temp)
 
     mapping = dict(zip(L3_temp,icg_outputs))
     #print("element",mapping["en"])
@@ -164,7 +167,7 @@ def handle_ff(definition, Enables_num, L3,ffin_list):
                 right_order.append(mapping[i])
 
         ii+=1  
- #   print (right_order)
+    #print (right_order)
     #map(icg_outputs[0],)
     for itemDeclaration in definition.items:
         item_type = type(itemDeclaration).__name__
@@ -184,8 +187,6 @@ def handle_ff(definition, Enables_num, L3,ffin_list):
                                 if m< len(right_order):
                                     hook.argname = right_order[m]
                                     m+=1
-
-                             
                             # print("HERE")
                             # print ("instancename",instance.name, "argument", hook.argname)
     return
@@ -247,7 +248,7 @@ def parsingprocess(definition):
                         if x.portname == "S":
                             L3.append(x.argname)
 
-            #print(L3)
+ 
             for hook in instance.portlist:
                 if instance.module == "sky130_fd_sc_hd__dfxtp_1":                                
                     if hook.portname == "D":
