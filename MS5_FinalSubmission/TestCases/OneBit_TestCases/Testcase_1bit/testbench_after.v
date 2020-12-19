@@ -1,21 +1,25 @@
+`define FUNCTIONAL
+`define UNIT_DELAY #1
 `include "sky130_fd_sc_hd.v"
-module testbench();
+`include "primitives.v"
+module testbench_after();
 reg  D_in;
 wire D_out;
 reg clk;
 reg en;
-	initial begin
-	    $dumpfile("testbench_after.vcd");	// vcd dump file
-	    $dumpvars;				// dump everything
-	end
-	
+
 
 test_1bit_after x(D_in,clk,en,D_out);
-//(d_in, clk, en, d_out, en1);
+initial begin
+	$dumpfile("testbench_after.vcd");	// vcd dump file
+	$dumpvars;
+end
+	
 
-parameter PERIOD = 10;
+
 
 always #5 clk = !clk;
+
 initial begin
 
 clk =0; 
@@ -23,6 +27,7 @@ clk =0;
 @(posedge clk);
 D_in = 0;
 en = 1; 
+$display("%d", D_out);
 
 #10;
 @(posedge clk);
@@ -31,10 +36,30 @@ en = 0;
 
 #10;
 @(posedge clk); 
-D_in =1;
+D_in =0;
 en = 1;
-
- 
+#10;
+@(posedge clk);
+D_in = 1;
+en = 0;
+#10;
+@(posedge clk);
+D_in = 1;
+en = 1;
+#10;
+@(posedge clk);
+D_in = 1;
+en = 1;
+#10;
+@(posedge clk);
+D_in = 0;
+en = 1;
+#10;
+@(posedge clk);
+D_in = 0;
+en = 0;
+#10;
 end
+
 
 endmodule 
